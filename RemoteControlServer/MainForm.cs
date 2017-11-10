@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using Timer = System.Windows.Forms.Timer;
 
 namespace RemoteControlServer
 {
     public partial class MainForm : Form
     {
-        System.Windows.Forms.Timer timer;
-        Thread thread;
+        private Timer _timer;
+        private Thread _thread;
 
         public MainForm()
         {
@@ -25,44 +20,30 @@ namespace RemoteControlServer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            timer = new System.Windows.Forms.Timer { Interval = 1000 };
-            timer.Tick += SendBroadcast;
-            timer.Start();
+            _timer = new Timer {Interval = 1000};
+            _timer.Tick += SendBroadcast;
+            _timer.Start();
 
-            thread = new Thread(new ThreadStart(AsynchronousSocketListener.StartListening));
-            thread.Start();
+            _thread = new Thread(AsynchronousSocketListener.StartListening);
+            _thread.Start();
         }
 
-        private void SendBroadcast(object sender, EventArgs args)
+        private static void SendBroadcast(object sender, EventArgs args)
         {
-            UdpClient udp = new UdpClient();
+            var udp = new UdpClient();
 
-            int GroupPort = 11111;
-            IPEndPoint groupEP = new IPEndPoint(IPAddress.Broadcast, GroupPort);
+            const int groupPort = 11111;
+            var groupEp = new IPEndPoint(IPAddress.Broadcast, groupPort);
 
-            byte[] sendBytes = Encoding.ASCII.GetBytes(Environment.MachineName);
+            var sendBytes = Encoding.ASCII.GetBytes(Environment.MachineName);
 
-            udp.Send(sendBytes, sendBytes.Length, groupEP);
+            udp.Send(sendBytes, sendBytes.Length, groupEp);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            timer.Stop();
-            thread.Abort();
+            _timer.Stop();
+            _thread.Abort();
         }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void btnOk_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
-
-
-
 }

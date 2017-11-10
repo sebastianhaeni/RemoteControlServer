@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace RemoteControlServer
 {
-    class Keyboard
+    internal static class Keyboard
     {
         internal static void SendKey(string value)
         {
@@ -42,9 +37,6 @@ namespace RemoteControlServer
                     break;
                 case "]":
                     value = "{]}";
-                    break;
-                default:
-
                     break;
             }
             SendKeys.SendWait(value);

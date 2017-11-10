@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsynchrounousSocketListener.cs" />
+    <Compile Include="AsynchronousSocketListener.cs" />
     <Compile Include="Keyboard.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
